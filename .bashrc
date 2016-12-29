@@ -14,7 +14,7 @@ alias cls='clear'
 #
 # Set up workspace home
 #
-WORKSPACE_HOME=/workspace
+WORKSPACE_HOME=/
 export WORKSPACE_HOME
 
 # ANT
