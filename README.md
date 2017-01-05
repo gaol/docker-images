@@ -1,5 +1,4 @@
 # Docker Images
 
-`master` branch contains basic Dockerfile build from `ubuntu/latest`.
+`converter-*` branchs contain images used to convert videos, audios, images, pdf files, word files, etc.
 
-tags based on master are like: `0.1, 0.2, 0.3, etc`
