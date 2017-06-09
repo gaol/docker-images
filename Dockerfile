@@ -2,6 +2,8 @@ FROM docker.io/centos:latest
 
 MAINTAINER Leo Gao <aoingl@gmail.com>
 
+ENV container docker
+
 # install basic utilities and open ssh
 RUN yum update \
   && yum install -y openjdk-8-jdk \
@@ -10,6 +12,16 @@ RUN yum update \
   vim passwd wget less curl tree util-linux binutils unzip tar xz-utils gzip jq iptables \
   git subversion git-svn \
   gcc
+
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+	systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+	rm -f /lib/systemd/system/multi-user.target.wants/*;\
+	rm -f /etc/systemd/system/*.wants/*;\
+	rm -f /lib/systemd/system/local-fs.target.wants/*; \
+	rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+	rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+	rm -f /lib/systemd/system/basic.target.wants/*;\
+	rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 # install maven & ant
 RUN mkdir -p /softwares/maven /softwares/ant /workspace && chmod -R 775 /softwares && chmod -R 777 /workspace
@@ -29,3 +41,5 @@ RUN systemctl enable sshd
 ADD .bashrc /home/leo/
 ADD .bashrc /root/
 
+VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/usr/sbin/init"]
