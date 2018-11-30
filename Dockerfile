@@ -6,7 +6,7 @@ MAINTAINER Leo Gao <aoingl@gmail.com>
 RUN yum install -y epel-release psmisc gcc gcc-c++ net-tools wget curl jq python java-1.8.0-openjdk-devel maven git vim passwd less tree util-linux binutils unzip tar xz-utils gzip git-svn python2-pip golang golang-src golang-bin make sudo iproute yum-langpacks
 
 # install node js to latest stable: 8.9.4
-RUN curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
+RUN curl --silent --location https://rpm.nodesource.com/setup_11.x | bash -
 RUN yum -y install nodejs
 
 # create workspace directory to share to all
