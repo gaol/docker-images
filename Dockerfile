@@ -21,3 +21,6 @@ RUN yum langinstall -y zh_CN
 RUN sed -i "s/override_install_langs=/#override_install_langs=/" /etc/yum.conf
 RUN yum reinstall -y glibc-common
 
+# add user lgao
+RUN groupadd -g 1000 lgao && useradd -u 1000 -g 1000 lgao && echo "lgao:lgao" | chpasswd
+
