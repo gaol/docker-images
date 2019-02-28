@@ -12,15 +12,20 @@ RUN yum -y install nodejs
 # create workspace directory to share to all
 RUN mkdir -p /workspace && chmod -R 777 /workspace
 
-# install ninja for useful functions
-RUN curl -s -L https://github.com/gaol/ninja/raw/master/install.sh | bash
-
 # install chinese support
 
 RUN yum langinstall -y zh_CN
 RUN sed -i "s/override_install_langs=/#override_install_langs=/" /etc/yum.conf
 RUN yum reinstall -y glibc-common
 
+# update root password
+RUN echo "root:root!" |chpasswd
+
 # add user lgao
 RUN groupadd -g 1000 lgao && useradd -u 1000 -g 1000 lgao && echo "lgao:lgao" | chpasswd
+USER lgao
+WORKDIR /home/lgao
+
+# install ninja for useful functions
+RUN curl -s -L https://github.com/gaol/ninja/raw/master/install.sh | bash
 
