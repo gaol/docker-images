@@ -1,31 +1,31 @@
-FROM docker.io/centos:centos7
+FROM asciidoctor/docker-asciidoctor
 
 MAINTAINER Leo Gao <aoingl@gmail.com>
 
-# install basic utilities
-RUN yum install -y epel-release psmisc gcc gcc-c++ net-tools wget curl jq python java-1.8.0-openjdk-devel maven git vim passwd less tree util-linux binutils unzip tar xz-utils gzip git-svn python2-pip golang golang-src golang-bin make sudo iproute yum-langpacks
+RUN apk add --update git libc6-compat libstdc++ \
+    && apk upgrade \
+    && apk add --no-cache ca-certificates
 
-# install node js to latest stable: 8.9.4
-RUN curl --silent --location https://rpm.nodesource.com/setup_11.x | bash -
-RUN yum -y install nodejs
+ENV HUGO_VERSION=0.67.0
 
-# create workspace directory to share to all
-RUN mkdir -p /workspace && chmod -R 777 /workspace
+ENV HUGO_TYPE=_extended
 
-# install chinese support
+ENV HUGO_ID=hugo${HUGO_TYPE}_${HUGO_VERSION}
+ADD https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${HUGO_ID}_Linux-64bit.tar.gz /tmp
+RUN tar -xf /tmp/${HUGO_ID}_Linux-64bit.tar.gz -C /tmp \
+    && mkdir -p /usr/local/sbin \
+    && mv /tmp/hugo /usr/local/sbin/hugo \
+    && rm -rf /tmp/${HUGO_ID}_linux_amd64 \
+    && rm -rf /tmp/${HUGO_ID}_Linux-64bit.tar.gz \
+    && rm -rf /tmp/LICENSE.md \
+    && rm -rf /tmp/README.md
 
-RUN yum langinstall -y zh_CN
-RUN sed -i "s/override_install_langs=/#override_install_langs=/" /etc/yum.conf
-RUN yum reinstall -y glibc-common
+VOLUME /src
+VOLUME /output
 
-# update root password
-RUN echo "root:root!" |chpasswd
+WORKDIR /src
 
-# add user lgao
-RUN groupadd -g 1000 lgao && useradd -u 1000 -g 1000 lgao && echo "lgao:lgao" | chpasswd
-USER lgao
-WORKDIR /home/lgao
+EXPOSE 1313
 
-# install ninja for useful functions
-RUN curl -s -L https://github.com/gaol/ninja/raw/master/install.sh | bash
+ENTRYPOINT ["/usr/local/sbin/hugo", "--source", "/src", "--destination", "/output"]
 
