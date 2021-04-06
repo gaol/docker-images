@@ -16,7 +16,7 @@
 //       for Postgres: application_name, sslmode, sslcert, sslkey, sslrootcert, sslcrl, sslcompression, service.
 //       e.g. 'mysql://roundcube:@localhost/roundcubemail?verify_server_cert=false'
 $config['db_dsnw'] = 'sqlite:////mnt/sqlite/roundcube/roundcube.sqlite?mode=0646';
-$config['enable_installer'] = true;
+//$config['enable_installer'] = true;
 
 $config['session_debug'] = true;
 $config['smtp_debug'] = true;
