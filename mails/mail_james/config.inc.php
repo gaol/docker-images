@@ -1,5 +1,7 @@
 <?php
+
 /* Local configuration for Roundcube Webmail */
+
 // ----------------------------------
 // SQL DATABASE
 // ----------------------------------
@@ -7,15 +9,18 @@
 // Format (compatible with PEAR MDB2): db_provider://user:password@host/database
 // Currently supported db_providers: mysql, pgsql, sqlite, mssql, sqlsrv, oracle
 // For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
-// NOTE: for SQLite use absolute path (Linux): 'sqlite:////full/path/to/sqlite.db?mode=0646'
+// Note: for SQLite use absolute path (Linux): 'sqlite:////full/path/to/sqlite.db?mode=0646'
 //       or (Windows): 'sqlite:///C:/full/path/to/sqlite.db'
-
-$config = array();
-
+// Note: Various drivers support various additional arguments for connection,
+//       for Mysql: key, cipher, cert, capath, ca, verify_server_cert,
+//       for Postgres: application_name, sslmode, sslcert, sslkey, sslrootcert, sslcrl, sslcompression, service.
+//       e.g. 'mysql://roundcube:@localhost/roundcubemail?verify_server_cert=false'
 $config['db_dsnw'] = 'sqlite:////mnt/sqlite/roundcube/roundcube.sqlite?mode=0646';
+$config['enable_installer'] = true;
 
-$config['timezone'] = 'Asia/Shanghai';
-date_default_timezone_set("Asia/Shanghai");
+$config['session_debug'] = true;
+$config['smtp_debug'] = true;
+$config['smtp_auth_type'] = LOGIN;
 
 // ----------------------------------
 // IMAP
@@ -23,7 +28,8 @@ date_default_timezone_set("Asia/Shanghai");
 // The IMAP host chosen to perform the log-in.
 // Leave blank to show a textbox at login, give a list of hosts
 // to display a pulldown menu or set one host as string.
-// To use SSL/TLS connection, enter hostname with prefix ssl:// or tls://
+// Enter hostname with prefix ssl:// to use Implicit TLS, or use
+// prefix tls:// to use STARTTLS.
 // Supported replacement variables:
 // %n - hostname ($_SERVER['SERVER_NAME'])
 // %t - hostname without the first part
@@ -32,25 +38,14 @@ date_default_timezone_set("Asia/Shanghai");
 // For example %n = mail.domain.tld, %t = domain.tld
 // WARNING: After hostname change update of mail_host column in users table is
 //          required to match old user data records with the new host.
-$config['default_host'] = '127.0.0.1';
-$config['default_port'] = 993;
-
-$config['imap_debug'] = true;
-
-$config['imap_conn_options'] = array(
-  'ssl' => array(
-     'verify_peer'  => true,
-     'verify_peer_name' => false,
-     'allow_self_signed' => true,
-   ),
-  );
+$config['default_host'] = array('localtest.tld');
 
 // ----------------------------------
 // SMTP
 // ----------------------------------
 // SMTP server host (for sending mails).
-// Enter hostname with prefix tls:// to use STARTTLS, or use
-// prefix ssl:// to use the deprecated SSL over SMTP (aka SMTPS)
+// Enter hostname with prefix ssl:// to use Implicit TLS, or use
+// prefix tls:// to use STARTTLS.
 // Supported replacement variables:
 // %h - user's IMAP hostname
 // %n - hostname ($_SERVER['SERVER_NAME'])
@@ -58,47 +53,46 @@ $config['imap_conn_options'] = array(
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = '127.0.0.1';
-$config['smtp_port'] = 465;
+$config['smtp_server'] = 'localtest.tld';
 $config['smtp_debug'] = true;
 
-$config['smtp_user'] = '%u';
-$config['smtp_pass'] = '%p';
-$config['smtp_conn_options'] = array(
-  'ssl' => array(
-     'verify_peer'  => true,
-     'verify_peer_name' => false,
-     'allow_self_signed' => true,
-   ),
-  );
+// SMTP port. Use 25 for cleartext, 465 for Implicit TLS, or 587 for STARTTLS (default)
+$config['smtp_port'] = 25;
+
+//$config['smtp_user'] = '%u';
+//$config['smtp_pass'] = '%p';
+$config['smtp_user'] = '';
+$config['smtp_pass'] = '';
 
 // provide an URL where a user can get support for this Roundcube installation
 // PLEASE DO NOT LINK TO THE ROUNDCUBE.NET WEBSITE HERE!
-$config['support_url'] = '';
+$config['support_url'] = 'http://localhost:9080/webmail/';
 
-// this key is used to encrypt the users imap password which is stored
-// in the session record (and the client cookie if remember password is enabled).
-// please provide a string of exactly 24 chars.
-// YOUR KEY MUST BE DIFFERENT THAN THE SAMPLE VALUE FOR SECURITY REASONS
-//$config['des_key'] = 'rcmail-!24ByteDESkey*Str';
-$config['des_key'] = 'Vertx-Mail-Client-testP!';
+// This key is used for encrypting purposes, like storing of imap password
+// in the session. For historical reasons it's called DES_key, but it's used
+// with any configured cipher_method (see below).
+// For the default cipher_method a required key length is 24 characters.
+$config['des_key'] = 'iTjUZFaoBJwbhGnuMljMBtvh';
 
-// Name your service. This is displayed on the login screen and in the window title
-$config['product_name'] = 'Roundcube Webmail - for Test';
 // ----------------------------------
 // PLUGINS
 // ----------------------------------
 // List of active plugins (in plugins/ directory)
-$config['plugins'] = array(
-    'archive',
-    'zipdownload',
-);
+$config['plugins'] = array('help', 'password', 'userinfo', 'zipdownload');
 
-// skin name: folder from skins/
+// the default locale setting (leave empty for auto-detection)
+// RFC1766 formatted language name like en_US, de_DE, de_CH, fr_FR, pt_BR
+$config['language'] = 'en_US';
+
+// Skin name: folder from skins/
 $config['skin'] = 'elastic';
 
-#$config['drafts_mbox'] = 'INBOX.Drafts';
-#$config['junk_mbox'] = 'INBOX.Junk';
-#$config['sent_mbox'] = 'INBOX.Sent';
-#$config['trash_mbox'] = 'INBOX.Trash';
-#$config['create_default_folders'] = true;
+// compose html formatted messages by default
+//  0 - never,
+//  1 - always,
+//  2 - on reply to HTML message,
+//  3 - on forward or reply to HTML message
+//  4 - always, except when replying to plain text message
+$config['htmleditor'] = 2;
+
+

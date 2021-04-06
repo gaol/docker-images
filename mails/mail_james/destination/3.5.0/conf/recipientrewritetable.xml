@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!-- If set recursiveMapping false only the first mapping will get processed. -->
+<!-- Default true. -->
+<!-- By setting the mappingLimit you can specify how much mapping will get processed -->
+<!-- before a bounce will send. This avoid infinity loops. Default 10.  -->
+<!--
+<recipientrewritetable class="org.apache.james.rrt.file.XMLRecipientRewriteTable">
+   <recursiveMapping>true</recursiveMapping>
+   <mappingLimit>10</mappingLimit>
+    
+   <mapping>some@domain=someuser</mapping>
+</recipientrewritetable>
+-->
+    
+<!-- The default table for storing James' RecipientRewriteTable mappings. -->
+<recipientrewritetable class="org.apache.james.rrt.jpa.JPARecipientRewriteTable">
+   <recursiveMapping>true</recursiveMapping>
+   <mappingLimit>10</mappingLimit>
+</recipientrewritetable>
+

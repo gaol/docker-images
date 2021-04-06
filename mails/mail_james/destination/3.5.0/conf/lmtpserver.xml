@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<lmtpservers>
+    <!-- The LMTP server is disabled by default -->
+    <!-- Disabling blocks will stop them from listening, -->
+    <!-- but does not free as many resources as removing them would -->
+    <lmtpserver enabled="false">
+       <jmxName>lmtpserver</jmxName>
+       <!-- LMTP should not be reachable from outside your network so bind it to loopback-->
+       <bind>127.0.0.1:24</bind>
+       <connectionBacklog>200</connectionBacklog>
+       <!-- This is the name used by the server to identify itself in the LMTP -->
+       <!-- protocol.  If autodetect is TRUE, the server will discover its -->
+       <!-- own host name and use that in the protocol.  If discovery fails, -->
+       <!-- the value of 'localhost' is used.  If autodetect is FALSE, James -->
+       <!-- will use the specified value. -->
+       <helloName autodetect="false">localtest.tld</helloName>
+       <connectiontimeout>1200</connectiontimeout>
+       <connectionLimit>0</connectionLimit>
+       <connectionLimitPerIP>0</connectionLimitPerIP>
+       <maxmessagesize>0</maxmessagesize>
+       <smtpGreeting>JAMES LMTP Server</smtpGreeting>
+       <handlerchain>
+           <handler class="org.apache.james.lmtpserver.CoreCmdHandlerLoader"/>
+       </handlerchain>
+    </lmtpserver>
+</lmtpservers>
