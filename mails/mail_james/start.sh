@@ -10,4 +10,4 @@ fi
 
 wdir="`dirname $0`"
 cwd="`cd $wdir && pwd`"
-docker run --name $dcname --hostname $dcname -v "$cwd/destination/${james_version}/conf:/root/conf" -v "$cwd/destination/${james_version}/logs:/root/logs" --env SMTP_HOSTNAME=$dcname --env IMAP_HOSTNAME=$dcname -p 9080:80 -p 9465:465 --rm -it $imgname
+docker run --name $dcname --hostname $dcname -v "$cwd/destination/${james_version}/conf:/root/conf" -v "$cwd/destination/${james_version}/logs:/root/logs" --env SMTP_HOSTNAME=$dcname --env IMAP_HOSTNAME=$dcname -p 9080:80 -p 9465:465 -p 9025:25 --rm -it $imgname
