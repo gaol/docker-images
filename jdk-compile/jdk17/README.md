@@ -3,8 +3,9 @@
 * Checkout openjdk sources
 
 * In source directory, run:
+> git clone https://github.com/openjdk/jdk17u
 
-> docker run --rm -it -v "$(pwd):/root/jdk-src" jdk-compile:jdk17 /bin/bash
+> docker run --rm -it -v "$(pwd):/root/jdk-src" aoingl/jdk-compile:jdk17 /bin/bash
 
 * In `jdk17-src` sub directory, run:
 
