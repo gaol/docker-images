@@ -59,7 +59,7 @@ $config['imap_conn_options'] = array(
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
 $config['smtp_server'] = '127.0.0.1';
-$config['smtp_port'] = 465;
+$config['smtp_port'] = 25;
 $config['smtp_debug'] = true;
 
 $config['smtp_user'] = '%u';
